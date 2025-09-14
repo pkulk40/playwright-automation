@@ -7,7 +7,7 @@ def get_title(page) -> str:
 def test_page_title():
     """Test that the page title is correct"""
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=False)
+        browser = playwright.chromium.launch(headless=True)
         context = browser.new_context()
         page = context.new_page()
         page.goto("https://www.automationexercise.com/")
