@@ -1,0 +1,42 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install playwright pytest pytest-html
+    
+    - name: Install Playwright browsers
+      run: |
+        playwright install chromium
+    
+    - name: Run Playwright tests
+      run: |
+        python -m pytest --html=report.html --self-contained-html --tb=short
+    
+    - name: Upload test report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-test-report
+        path: report.html
+        retention-days: 30
